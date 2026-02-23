@@ -40,7 +40,7 @@ npm-debug.log*
 Thumbs.db
 
 #design and asset files
-/assets
-/design
-*.md
-preview.jpg
+# /assets
+# /design
+# *.md
+# preview.jpg
