@@ -1,8 +1,11 @@
 const ddlUnits = document.querySelector("#ddlUnits");
+const dvCityCountry = document.querySelector("#dvCityCountry");
+const dvCurrDate = document.querySelector("#dvCurrDate");
+const dvCurrTemp = document.querySelector("#dvCurrTemp");
 let cityName, countryName;
 
 async function getGeoData() {
-  let search = "Kathmandu"
+  let search = "pokhara"
   const url = `https://nominatim.openstreetmap.org/search?q=${search}&format=jsonv2&addressdetails=1`;
   try {
     const response = await fetch(url);
@@ -24,9 +27,20 @@ async function getGeoData() {
 function LoadLocationData(locationData){
   let location =  locationData[0].address;
   cityName = location.city;
-  countryName = location.country;
-  console.log(cityName, countryName);
+  countryName = location.country_code.toUpperCase();
 
+  let dateOptions = {
+    year:"numeric",
+    month:"short",
+    day:"numeric",
+    weekday:"long",
+  };
+
+  let date = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date());
+  console.log(cityName, countryName, date);
+
+  dvCityCountry.textContent = `${cityName}, ${countryName}`
+  dvCurrDate.textContent = date;
 }
 
 async function getWeatherData(lat,lon) {
