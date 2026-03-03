@@ -1,11 +1,18 @@
+//Current Weather
 const ddlUnits = document.querySelector("#ddlUnits");
 const dvCityCountry = document.querySelector("#dvCityCountry");
 const dvCurrDate = document.querySelector("#dvCurrDate");
 const dvCurrTemp = document.querySelector("#dvCurrTemp");
+
+//Current Conditions
+const pFeelsLike = document.querySelector("#pFeelsLike");
+const pHumidity = document.querySelector("#pHumidity");
+const pWind = document.querySelector("#pWind");
+const pPrecipitation = document.querySelector("#pPrecipitation");
 let cityName, countryName;
 
 async function getGeoData() {
-  let search = "pokhara"
+  let search = "Hetauda"
   const url = `https://nominatim.openstreetmap.org/search?q=${search}&format=jsonv2&addressdetails=1`;
   try {
     const response = await fetch(url);
@@ -70,9 +77,23 @@ async function getWeatherData(lat,lon) {
 
     const result = await response.json();
     console.log(result);
+
+    LoadWeatherData(result);
   } catch (error) {
     console.error(error.message);
   }
 }
 
+function LoadWeatherData(weather){
+  dvCurrTemp.textContent = Math.round(weather.current.temperature_2m);
+  pFeelsLike.textContent = Math.round(weather.current.apparent_temperature);
+  pHumidity.textContent = weather.current.relative_humidity_2m;
+  pWind.textContent = `${Math.round(weather.current.wind_speed_10m)} ${weather.current_units.wind_speed_10m.replace("mp/h","mph")}`;
+  pPrecipitation.textContent = `${weather.current.precipitation} ${weather.current_units.precipitation.replace("inch","in")}`;
+
+}
+
+ddlUnits.addEventListener("change", () => {
+  getGeoData();
+});
 getGeoData();
