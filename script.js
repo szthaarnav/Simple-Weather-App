@@ -93,15 +93,50 @@ function LoadWeatherData(weather){
 
 }
 
-function getWeatherCode(code){
-  //Drizzle = 51, 53, 55, 56, 57
-  // Fog = 45, 48
-  // Overcast = 3
+function getWeatherFileName(code){
+  // Sunny = 0
   // Partly Cloudly = 1, 2
+  // Overcast = 3
+  // Fog = 45, 48
+  //Drizzle = 51, 53, 55, 56, 57
   // Rain = 61, 63, 65, 66, 67, 80, 81, 82
   // Snow = 71, 73, 75, 77, 85, 86
   // Storm = 95, 96, 99
-  // Sunny = 0
+
+  const weatherCodes = {
+    0:"sunny",
+    1:"partly-cloudy",
+    2:"partly-cloudy",
+    3:"overcast",
+    45:"fog",
+    48:"fog",
+    51:"drizzle",
+    53:"drizzle",
+    55:"drizzle",
+    56:"drizzle",
+    57:"drizzle",
+    61:"rain", 
+    63:"rain", 
+    65:"rain", 
+    66:"rain", 
+    67:"rain", 
+    80:"rain", 
+    81:"rain", 
+    82:"rain",
+    71:"snow",
+    73:"snow",
+    75:"snow",
+    77:"snow",
+    85:"snow",
+    86:"snow",
+    95:"storm",
+    96:"storm",
+    99:"storm"
+  };
+
+  let fileName = `icon-${weatherCodes[code]}.webp`;
+
+  return fileName;
 }
 
 ddlUnits.addEventListener("change", () => {
