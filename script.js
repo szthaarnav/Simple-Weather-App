@@ -101,12 +101,17 @@ function LoadDailyForecast(weather){
   for(let i=0;i<7;i++){
     let date = new Date(daily.time[i]).getDay();
     let dayOfWeek = new Intl.DateTimeFormat("en-US",{weekday : "short"}).format(date);
-    console.log(dayOfWeek);
-    let dvDay = document.querySelector(`#dvForecastDay${i+1} .daily_day-title`);
+    let dvForecastDay = document.querySelector(`#dvForecastDay${i+1}`);
+    // console.log(dayOfWeek);
 
     //dynamic p.daily_day-title generation for other divs of days
+    const newDayofWeek = document.createElement("p");
+    newDayofWeek.setAttribute("class","daily_day-title");
+    const newContent = document.createTextNode(dayOfWeek);
+    newDayofWeek.appendChild(newContent);
+    dvForecastDay.insertAdjacentElement("afterbegin",newDayofWeek);
 
-    dvDay.textContent = dayOfWeek;
+    
   }
 
   }
