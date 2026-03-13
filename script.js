@@ -43,7 +43,8 @@ function LoadLocationData(locationData){
     weekday:"long",
   };
 
-  let date = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date());
+  let date = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date()); 
+  // getDayOfWeek(new Date(), "long");
   console.log(cityName, countryName, date);
 
   dvCityCountry.textContent = `${cityName}, ${countryName}`
@@ -78,13 +79,14 @@ async function getWeatherData(lat,lon) {
     const result = await response.json();
     console.log(result);
 
-    LoadWeatherData(result);
+    LoadCurrentWeather(result);
+    LoadDailyForecast(result);
   } catch (error) {
     console.error(error.message);
   }
 }
 
-function LoadWeatherData(weather){
+function LoadCurrentWeather(weather){
   dvCurrTemp.textContent = Math.round(weather.current.temperature_2m);
   pFeelsLike.textContent = Math.round(weather.current.apparent_temperature);
   pHumidity.textContent = weather.current.relative_humidity_2m;
@@ -92,6 +94,23 @@ function LoadWeatherData(weather){
   pPrecipitation.textContent = `${weather.current.precipitation} ${weather.current_units.precipitation.replace("inch","in")}`;
 
 }
+
+function LoadDailyForecast(weather){
+  let daily = weather.daily;
+
+  for(let i=0;i<7;i++){
+    let date = new Date(daily.time[i]).getDay();
+    let dayOfWeek = new Intl.DateTimeFormat("en-US",{weekday : "short"}).format(date);
+    console.log(dayOfWeek);
+    let dvDay = document.querySelector(`#dvForecastDay${i+1} .daily_day-title`);
+
+    //dynamic p.daily_day-title generation for other divs of days
+
+    dvDay.textContent = dayOfWeek;
+  }
+
+  }
+
 
 function getWeatherFileName(code){
   // Sunny = 0
