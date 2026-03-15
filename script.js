@@ -12,7 +12,7 @@ const pPrecipitation = document.querySelector("#pPrecipitation");
 let cityName, countryName;
 
 async function getGeoData() {
-  let search = "Hetauda"
+  let search = "Jhamsikhel"
   const url = `https://nominatim.openstreetmap.org/search?q=${search}&format=jsonv2&addressdetails=1`;
   try {
     const response = await fetch(url);
@@ -69,7 +69,7 @@ async function getWeatherData(lat,lon) {
   //wind_speed_unit = kmh(default) OR ms Or mph OR kn
   //precipitation_unit = mm(default) OR inch
 
-  // const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -99,25 +99,47 @@ function LoadDailyForecast(weather){
   let daily = weather.daily;
 
   for(let i=0;i<7;i++){
-    let date = new Date(daily.time[i]).getDay();
+    let date = new Date(daily.time[i]);
     let dayOfWeek = new Intl.DateTimeFormat("en-US",{weekday : "short"}).format(date);
     let dvForecastDay = document.querySelector(`#dvForecastDay${i+1}`);
+    let weatherCodeName = getWeatherCodeName(daily.weather_code[i]);
+    let dailyHigh = Math.round(daily.temperature_2m_max[i]) + "°";
+    let dailyLow = Math.round(daily.temperature_2m_min[i]) + "°";
     // console.log(dayOfWeek);
 
-    //dynamic p.daily_day-title generation for other divs of days
-    const newDayofWeek = document.createElement("p");
-    newDayofWeek.setAttribute("class","daily_day-title");
-    const newContent = document.createTextNode(dayOfWeek);
-    newDayofWeek.appendChild(newContent);
-    dvForecastDay.insertAdjacentElement("afterbegin",newDayofWeek);
+    //Add content
+    addDailyElement("p","daily_day-title",dayOfWeek,"",dvForecastDay,"afterbegin");
+    addDailyElement("img","daily_day-icon","",weatherCodeName,dvForecastDay,"beforeend");
+    addDailyElement("div","daily_day-temps","","",dvForecastDay,"beforeend");
 
-    
+    let dvDailyTemps = document.querySelector(`#dvForecastDay${i+1} .daily_day-temps`);
+    addDailyElement("p","daily_day-high",dailyHigh,"",dvDailyTemps,"afterbegin");
+    addDailyElement("p","daily_day-low",dailyLow,"",dvDailyTemps,"beforeend");
+
+  }
+  
+
   }
 
+function addDailyElement(tag, className, content, weatherCodeName, parentElement, position){
+  const newElement = document.createElement(tag);
+  newElement.setAttribute("class",className);
+  if(content !== ""){
+    const newContent = document.createTextNode(content);
+    newElement.appendChild(newContent);
   }
 
+  if(tag === "img"){
+    newElement.setAttribute("src",`/assets/images/icon-${weatherCodeName}.webp`);
+    newElement.setAttribute("alt",weatherCodeName);
+    newElement.setAttribute("width","320");
+    newElement.setAttribute("height","320");
+  }
+  parentElement.insertAdjacentElement(position, newElement);
+}
 
-function getWeatherFileName(code){
+
+function getWeatherCodeName(code){
   // Sunny = 0
   // Partly Cloudly = 1, 2
   // Overcast = 3
@@ -158,9 +180,7 @@ function getWeatherFileName(code){
     99:"storm"
   };
 
-  let fileName = `icon-${weatherCodes[code]}.webp`;
-
-  return fileName;
+  return weatherCodes[code];
 }
 
 ddlUnits.addEventListener("change", () => {
