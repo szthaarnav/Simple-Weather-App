@@ -12,7 +12,7 @@ const pPrecipitation = document.querySelector("#pPrecipitation");
 let cityName, countryName;
 
 async function getGeoData() {
-  let search = "Jhamsikhel"
+  let search = "New Road, Kathmandu";
   const url = `https://nominatim.openstreetmap.org/search?q=${search}&format=jsonv2&addressdetails=1`;
   try {
     const response = await fetch(url);
@@ -26,6 +26,7 @@ async function getGeoData() {
     let lon = result[0].lon;
     LoadLocationData(result);
     getWeatherData(lat,lon);
+    LoadHourlyForecast();
   } catch (error) {
     console.error(error.message);
   }
@@ -43,12 +44,12 @@ function LoadLocationData(locationData){
     weekday:"long",
   };
 
-  let date = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date()); 
+  let currDate = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date()); 
   // getDayOfWeek(new Date(), "long");
-  console.log(cityName, countryName, date);
+  console.log(cityName, countryName, currDate);
 
   dvCityCountry.textContent = `${cityName}, ${countryName}`
-  dvCurrDate.textContent = date;
+  dvCurrDate.textContent = currDate;
 }
 
 async function getWeatherData(lat,lon) {
@@ -69,7 +70,7 @@ async function getWeatherData(lat,lon) {
   //wind_speed_unit = kmh(default) OR ms Or mph OR kn
   //precipitation_unit = mm(default) OR inch
 
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
+  // const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -102,6 +103,8 @@ function LoadDailyForecast(weather){
     let date = new Date(daily.time[i]);
     let dayOfWeek = new Intl.DateTimeFormat("en-US",{weekday : "short"}).format(date);
     let dvForecastDay = document.querySelector(`#dvForecastDay${i+1}`);
+
+    dvForecastDay.innerHTML = "";
     let weatherCodeName = getWeatherCodeName(daily.weather_code[i]);
     let dailyHigh = Math.round(daily.temperature_2m_max[i]) + "°";
     let dailyLow = Math.round(daily.temperature_2m_min[i]) + "°";
@@ -120,6 +123,21 @@ function LoadDailyForecast(weather){
   
 
   }
+
+function LoadHourlyForecast(){
+  let dateOptions = {
+    year:"numeric",
+    month:"numeric",
+    day:"numeric",
+  };
+
+  // let currDate = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date()); 
+  let currDate = new Date();
+  let year = currDate.getFullYear().toString().padStart(2,"0");
+  let month = currDate.getMonth().toString().padStart(2,"0");
+  let date = currDate.getDate().toString().padStart(2,"0");
+  console.log(`${year}-${month}-${date}`);
+}
 
 function addDailyElement(tag, className, content, weatherCodeName, parentElement, position){
   const newElement = document.createElement(tag);
