@@ -70,7 +70,7 @@ async function getWeatherData(lat,lon) {
   //wind_speed_unit = kmh(default) OR ms Or mph OR kn
   //precipitation_unit = mm(default) OR inch
 
-  // const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -131,12 +131,22 @@ function LoadHourlyForecast(){
     day:"numeric",
   };
 
-  // let currDate = new Intl.DateTimeFormat("en-US",dateOptions).format(new Date()); 
-  let currDate = new Date();
-  let year = currDate.getFullYear().toString().padStart(2,"0");
-  let month = currDate.getMonth().toString().padStart(2,"0");
-  let date = currDate.getDate().toString().padStart(2,"0");
-  console.log(`${year}-${month}-${date}`);
+  for(let i = 0; i<7;i++){
+    
+    // let currDate = new Date();
+    // currDate.setDate(currDate.getDate() + i);
+    // console.log(new Intl.DateTimeFormat("en-US",dateOptions).format(currDate));
+    // let year = currDate.getFullYear().toString().padStart(2,"0");
+    // let month = (currDate.getMonth() + 1).toString().padStart(2,"0");//month starts from 0
+    // let date = currDate.getDate().toString().padStart(2,"0");
+    // console.log(`${year}-${month}-${date}`);
+  }
+}
+
+function getHours(){
+  // for(let h=0;h<=23;h++){
+  //   console.log(h);
+  //   }
 }
 
 function addDailyElement(tag, className, content, weatherCodeName, parentElement, position){
