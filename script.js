@@ -26,7 +26,6 @@ async function getGeoData() {
     let lon = result[0].lon;
     LoadLocationData(result);
     getWeatherData(lat,lon);
-    LoadHourlyForecast();
   } catch (error) {
     console.error(error.message);
   }
@@ -70,7 +69,7 @@ async function getWeatherData(lat,lon) {
   //wind_speed_unit = kmh(default) OR ms Or mph OR kn
   //precipitation_unit = mm(default) OR inch
 
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
+  // const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -82,6 +81,7 @@ async function getWeatherData(lat,lon) {
 
     LoadCurrentWeather(result);
     LoadDailyForecast(result);
+    LoadHourlyForecast(result);
   } catch (error) {
     console.error(error.message);
   }
@@ -124,22 +124,27 @@ function LoadDailyForecast(weather){
 
   }
 
-function LoadHourlyForecast(){
+function LoadHourlyForecast(weather){
   let dateOptions = {
     year:"numeric",
     month:"numeric",
     day:"numeric",
   };
 
-  for(let i = 0; i<7;i++){
-    
-    // let currDate = new Date();
-    // currDate.setDate(currDate.getDate() + i);
-    // console.log(new Intl.DateTimeFormat("en-US",dateOptions).format(currDate));
-    // let year = currDate.getFullYear().toString().padStart(2,"0");
-    // let month = (currDate.getMonth() + 1).toString().padStart(2,"0");//month starts from 0
-    // let date = currDate.getDate().toString().padStart(2,"0");
-    // console.log(`${year}-${month}-${date}`);
+  for(let i = 0; i < 7; i++){
+    console.log(`Day ${i+1}`);
+    let firstHour = 24 * i;
+    let lastHour = 24 * (i + 1) - 1;
+    let weatherCodes = weather.hourly.weather_code;
+    let temps = weather.hourly.temperature_2m;
+    let hours = weather.hourly.time;
+
+    for(let h = firstHour; h< lastHour + 1; h++){
+      let weatherName = getWeatherCodeName(weatherCodes[h]); 
+      let temp = temps[h];
+      let hour = new Date(hours[h]).toLocaleString("en-US",{hour: "numeric", hour12: true});
+      console.log(hour, weatherName ,temp);
+    }
   }
 }
 
