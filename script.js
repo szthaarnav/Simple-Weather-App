@@ -69,7 +69,7 @@ async function getWeatherData(lat,lon) {
   //wind_speed_unit = kmh(default) OR ms Or mph OR kn
   //precipitation_unit = mm(default) OR inch
 
-  // const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,precipitation,temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipUnit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -124,28 +124,28 @@ function LoadDailyForecast(weather){
 
   }
 
-function LoadHourlyForecast(weather){
-  let dateOptions = {
-    year:"numeric",
-    month:"numeric",
-    day:"numeric",
-  };
+function LoadHourlyForecast(weather, dayIndex = 0){
 
-  for(let i = 0; i < 7; i++){
-    console.log(`Day ${i+1}`);
-    let firstHour = 24 * i;
-    let lastHour = 24 * (i + 1) - 1;
+    console.log(`Day ${dayIndex+1}`);
+    let firstHour = 24 * dayIndex;
+    let lastHour = 24 * (dayIndex + 1) - 1;
     let weatherCodes = weather.hourly.weather_code;
     let temps = weather.hourly.temperature_2m;
     let hours = weather.hourly.time;
 
-    for(let h = firstHour; h< lastHour + 1; h++){
-      let weatherName = getWeatherCodeName(weatherCodes[h]); 
-      let temp = temps[h];
+    for(let h = firstHour; h< lastHour; h++){
+      let weatherCodeName = getWeatherCodeName(weatherCodes[h]); 
+      let temp = Math.round(temps[h]) + "°";
       let hour = new Date(hours[h]).toLocaleString("en-US",{hour: "numeric", hour12: true});
-      console.log(hour, weatherName ,temp);
+      console.log(hour, weatherCodeName ,temp);
+
+      let dvForecastHour = document.querySelector(`#dvForecastHour${h+1}`);
+
+      addDailyElement("img","hourly_hour-icon","",weatherCodeName,dvForecastHour,"afterbegin");
+      addDailyElement("p","hourly_hour-time",hour,"",dvForecastHour,"beforeend");
+      addDailyElement("p","hourly_hour-temp",temp,"",dvForecastHour,"beforeend");
     }
-  }
+
 }
 
 function getHours(){
