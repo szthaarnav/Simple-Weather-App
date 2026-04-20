@@ -1,5 +1,6 @@
 //Current Weather
 const ddlUnits = document.querySelector("#ddlUnits");
+const ddlDay = document.querySelector("#ddlDay");
 const dvCityCountry = document.querySelector("#dvCityCountry");
 const dvCurrDate = document.querySelector("#dvCurrDate");
 const dvCurrTemp = document.querySelector("#dvCurrTemp");
@@ -82,6 +83,7 @@ async function getWeatherData(lat,lon) {
     LoadCurrentWeather(result);
     LoadDailyForecast(result);
     LoadHourlyForecast(result);
+    populateDayOfWeek();
   } catch (error) {
     console.error(error.message);
   }
@@ -214,6 +216,16 @@ function getWeatherCodeName(code){
   };
 
   return weatherCodes[code];
+}
+
+function populateDayOfWeek(){
+  const newOption = document.createElement("option");
+  newOption.setAttribute("class","hourly_select-day");
+  newOption.setAttribute("value","0");
+  const dayOfWeek = document.createTextNode("Monday");
+  newOption.appendChild(dayOfWeek);
+
+  ddlDay.insertAdjacentElement("beforeend", newOption);
 }
 
 ddlUnits.addEventListener("change", () => {
