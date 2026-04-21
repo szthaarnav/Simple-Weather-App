@@ -161,7 +161,7 @@ function addDailyElement(tag, className, content, weatherCodeName, parentElement
   }
 
   if(tag === "img"){
-    newElement.setAttribute("src",`/assets/images/icon-${weatherCodeName}.webp`);
+    newElement.setAttribute("src",`./assets/images/icon-${weatherCodeName}.webp`);
     newElement.setAttribute("alt",weatherCodeName);
     newElement.setAttribute("width","320");
     newElement.setAttribute("height","320");
