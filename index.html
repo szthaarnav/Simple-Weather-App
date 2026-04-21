@@ -25,10 +25,10 @@
         <img class="header_logo" src="/assets/images/logo.svg" alt="Weather Now Home" width="197" height="40">
       </a>
   
-      <select class="header_dropdown" name="units" id="ddlUnits">
+      <select class="dropdown header_dropdown" name="units" id="ddlUnits">
         <option value="">Units</option>
-        <option value="C">Celsius</option>
-        <option value="F">Fahrenheit</option>
+        <option value="C">&deg;C</option>
+        <option value="F">&deg;F</option>
       </select>
     </div>
   </header>
@@ -111,7 +111,7 @@
         <div class="hourly_content">
           <div class="hourly_header">
             <h2 class="section_title hourly_title">Hourly Forecast</h2>
-            <select name="hourly_select" id="ddlDay"></select>
+            <select class="hourly_select dropdown" name="hourly_select" id="ddlDay"></select>
           </div>
     
           <div class="hourly_hours">

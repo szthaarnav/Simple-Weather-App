@@ -234,12 +234,8 @@ function populateDayOfWeek(){
 }
 
 populateDayOfWeek();
-searchBtn.addEventListener("click",() => {
-  getGeoData();
-})
-ddlUnits.addEventListener("change", () => {
-  getGeoData();
-});
+searchBtn.addEventListener("click", getGeoData)
+ddlUnits.addEventListener("change", getGeoData);
 getGeoData();
 ddlDay.addEventListener("change", () => {
   LoadHourlyForecast(weatherData);

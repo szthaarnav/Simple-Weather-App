@@ -132,7 +132,7 @@
       font-family:"Bricolage Grotesque", Arial, Helvetica, sans-serif ;
   }
 
-  input,button, textarea{
+  input,button, textarea, select{
     font: inherit;
     width: 100%;
     border: none;
@@ -194,6 +194,14 @@
     }  
   }
 
+  .dropdown{
+    background-color: var(--color-panel-bg-dark);
+    color: var(--color-text-light);
+    border: 0;
+    font-size: var(--font-size-dropdown);
+    border-radius: 8px;
+  }
+
   .block{
     background-color: var(--color-panel-bg-dark);
     border: 1px solid var(--color-panel-border);
@@ -210,10 +218,7 @@
       justify-content: space-between;
       padding-block-start: 16px;
     }
-
-    .header_homelink{
-
-    }
+    
     .header_logo{
       width: calc(137/16 * 1rem);
       
@@ -223,7 +228,11 @@
       }
     }
     .header_dropdown{
-      width: calc(90/16 * 1rem);
+      width: auto;
+      background-image: url(/assets/images/icon-units.svg);
+      background-repeat: no-repeat;
+      background-position: 16px center;
+      padding: 12px 16px 12px 40px;
     }
   }
 
@@ -405,9 +414,6 @@
       justify-content: space-between;
       font-size: var(--font-size-forecast-temp);
     }
-    .daily_day-high{
-
-    }
     .daily_day-low{
       color: var(--color-text-med-light);
     }
@@ -415,13 +421,23 @@
 
   .hourly{
     grid-area: hourly;
+    position: relative;
+
     .hourly_content{
       background-color: var(--color-panel-bg-dark);
       border-radius: 20px;
       padding: 20px 16px;
+      max-height: 75vh;
+      overflow-y: scroll;
+      @media (width>= calc(1000/16 * 1rem)){
+        position: absolute;
+        height: 100%;
+        
+      }
     }
     .hourly_header{
       display: flex;
+      gap: 40px;
       justify-content: space-between;
       align-items: center;
       margin-block-end: 16px;
@@ -431,8 +447,11 @@
       font-size: var(--font-size-forecast-title);
       font-weight: 600;
     }
-    .hourly_select{}
-    .hourly_select-day{}
+    .hourly_select{
+      background-color: var(--color-panel-bg-light);
+      width: auto;
+      padding: 8px 16px;
+    }
     .hourly_hours{
       display: grid;
       gap: 16px;
